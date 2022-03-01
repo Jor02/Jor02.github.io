@@ -1,0 +1,15 @@
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+.card {
+  position: relative;
+  overflow: hidden;
+}
+
+iframe {
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+}
