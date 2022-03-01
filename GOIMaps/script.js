@@ -2,7 +2,7 @@ var grid = document.getElementById("grid");
 var template = document.getElementById("maptemplate");
 
 fetch(
-  "https://opensheet.elk.sh/1qcQfUBKkgwpQnt0fAQmPUsRS3xuBP0WkmazVXDoL6IY/Detailed+Map+List"
+  "./data.json" //https://opensheet.elk.sh/1qcQfUBKkgwpQnt0fAQmPUsRS3xuBP0WkmazVXDoL6IY/Detailed+Map+List
 )
   .then((res) => res.json())
   .then((data) =>
@@ -48,21 +48,35 @@ function isNullOrEmpty(str) {
 }
 
 function getYoutubeEmbed(url) {
-  const videoId = getId(url);
-  const iframeMarkup =
-    '<iframe height="227" src="//www.youtube.com/embed/' +
-    videoId +
-    '" frameborder="0" allowfullscreen></iframe>';
+  const video = parseURL(url);
+  const iframeMarkup = `<iframe 
+      height="227"
+      srcdoc="<link rel='stylesheet' href='./video.css'/><a href=https://www.youtube.com/embed/${video.id}?autoplay=1&start=${video.time == null ? 0 : video.time}><img src=https://img.youtube.com/vi/${video.id}/hqdefault.jpg alt='video'><span>▶</span></a>"
+      frameborder="0"
+      allowfullscreen
+      loading="lazy">
+    </iframe>`;
 
     const placeholder = document.createElement("div");
     placeholder.innerHTML = iframeMarkup;
-
     return iframeMarkup;
 }
 
-function getId(url) {
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+function parseURL(url) {
+  //const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const regExp =
+    /^.*?(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*)(?:(\?t|\?start|\&t|\&start)=(\d+))?.*/;
+  const match = url.match(regExp);
+  return {
+    id: match && match[2].length === 11 ? match[2] : null,
+    time: match && match[4] 
+  };
+}
+
+function getTimestamp(url) {
+  const regExp =
+    /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?.*t=|&t=|time=|&time=)([\d]*).*/;
   const match = url.match(regExp);
 
-  return match && match[2].length === 11 ? match[2] : null;
+  return match && match[2];
 }
