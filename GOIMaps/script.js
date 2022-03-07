@@ -2,7 +2,7 @@ var grid = document.getElementById("grid");
 var template = document.getElementById("maptemplate");
 
 fetch(
-  "https://opensheet.elk.sh/1qcQfUBKkgwpQnt0fAQmPUsRS3xuBP0WkmazVXDoL6IY/Detailed+Map+List"
+  "https://opensheet.elk.sh/11bmvaGVkJtoERDa9Caobigt3s7EsLEpEFqaVB2Gb2Xk/map_data"
 )
   .then((res) => res.json())
   .then((data) =>
