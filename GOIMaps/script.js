@@ -17,21 +17,29 @@ function CreateTile(row) {
 
   if ("content" in document.createElement("template")) {
     //Clone Template
-    var node = template.content.children[0].cloneNode(true);
+    let node = template.content.children[0].cloneNode(true);
 
     //Video
     if (!isNullOrEmpty(row["Video"]))
       node.children[0].children[0].innerHTML = getYoutubeEmbed(row["Video"]);
 
     //Get Body
-    var cardbody = node.children[0].children[1];
+    let cardbody = node.children[0].children[1];
     cardbody.children[0].children[0].textContent = escapeHtml(row["Map Name"]); // Title
     cardbody.children[0].children[0].href = row["Download"];
     cardbody.children[0].children[1].textContent = !isNullOrEmpty(row["Author"]) ? "By " + escapeHtml(row["Author"]) : ""; // Author
-    if (!isNullOrEmpty(row["Comments / Notes"])) cardbody.children[1].textContent = escapeHtml(row["Comments / Notes"]);
+    
+    var mapInfo = [];
+    if (!isNullOrEmpty(row["Length"])) mapInfo.push(row["Length"]);
+    if (!isNullOrEmpty(row["3D / 2.5D / 2D"])) mapInfo.push(row["3D / 2.5D / 2D"]);
+    if (!isNullOrEmpty(row["Category / Type / Style"])) mapInfo.push(row["Category / Type / Style"].replace(/\s*map\s*$/i, "").toLowerCase());
+    if (mapInfo.length > 0) mapInfo.push(" map");
+    cardbody.children[1].textContent = mapInfo.join(" ");
+
+    cardbody.children[2].textContent = isNullOrEmpty(row["Comments / Notes"]) ? "No desciption :(" : escapeHtml(row["Comments / Notes"]);
     return node;
   } else {
-    var node = document.createElement("p");
+    let node = document.createElement("p");
     node.appendChild(document.createTextNode(row["Map Name"]));
     return node;
   }
